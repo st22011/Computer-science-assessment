@@ -5,9 +5,9 @@ from tkinter import messagebox
 class PartyHireApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Party Hire Service")
+        self.root.title("Judy's Party Hire Service")
 
-        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ"]  # List of available items
+        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ", "Lights", "Dance Floor", "Projector"]  # List of available items
         self.orders = []  # List to store orders
 
         self.create_widgets()
@@ -104,12 +104,15 @@ class PartyHireApp:
             # Remove order from the list
             self.orders.pop(selected_index[0])
 
+            # Update the listbox
+            self.listbox_orders.delete(selected_index)
+
 
 # Create the main window
 root = tk.Tk()
 
 # Set window title
-root.title("Party Hire Service")
+root.title("Judy's Party Hire Service")
 
 # Create an instance of the PartyHireApp
 app = PartyHireApp(root)
