@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import random
 
 
@@ -44,9 +45,15 @@ class PartyHireApp:
         )
         self.btn_order.pack(pady=10)
 
-        # Orders List
-        self.listbox_orders = tk.Listbox(self.root, width=50)
-        self.listbox_orders.pack()
+        # Tree View
+        self.treeview_orders = ttk.Treeview(
+            self.root, columns=("Receipt No", "Customer", "Item", "Quantity"), show="headings"
+        )
+        self.treeview_orders.heading("Receipt No", text="Receipt No")
+        self.treeview_orders.heading("Customer", text="Customer")
+        self.treeview_orders.heading("Item", text="Item")
+        self.treeview_orders.heading("Quantity", text="Quantity")
+        self.treeview_orders.pack()
 
         # Delete Button
         self.btn_delete = tk.Button(
@@ -55,8 +62,12 @@ class PartyHireApp:
         self.btn_delete.pack(pady=10)
 
         # Validate Customer Name Entry
-        self.entry_name.config(validate="key", validatecommand=(self.root.register(self.validate_customer_name), "%P"))
-        self.entry_quantity.config(validate="key", validatecommand=(self.root.register(self.validate_quantity), "%P"))
+        self.entry_name.config(
+            validate="key", validatecommand=(self.root.register(self.validate_customer_name), "%P")
+        )
+        self.entry_quantity.config(
+            validate="key", validatecommand=(self.root.register(self.validate_quantity), "%P")
+        )
 
     def validate_customer_name(self, input_text):
         # Validate customer name input
@@ -89,26 +100,27 @@ class PartyHireApp:
         receipt_number = random.randint(1000, 9999)
 
         # Add order to the list
-        order = f"Receipt No: {receipt_number} - Customer: {name} - Item: {item} - Quantity: {quantity}"
+        order = (receipt_number, name, item, quantity)
         self.orders.append(order)
 
-        # Update listbox
-        self.listbox_orders.insert(tk.END, order)
+        # Update tree view
+        self.treeview_orders.insert("", tk.END, values=order)
 
         # Clear input fields
         self.entry_name.delete(0, tk.END)
         self.entry_quantity.delete(0, tk.END)
 
     def delete_order(self):
-        # Get the selected index
-        selected_index = self.listbox_orders.curselection()
+        # Get the selected item
+        selected_item = self.treeview_orders.selection()
 
-        if selected_index:
+        if selected_item:
             # Remove order from the list
-            self.orders.pop(selected_index[0])
+            index = self.treeview_orders.index(selected_item)
+            self.orders.pop(index)
 
-            # Update the listbox
-            self.listbox_orders.delete(selected_index)
+            # Update the tree view
+            self.treeview_orders.delete(selected_item)
 
 
 # Create the main window
