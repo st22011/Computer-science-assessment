@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import random
 
 
 class PartyHireApp:
@@ -7,7 +8,7 @@ class PartyHireApp:
         self.root = root
         self.root.title("Judy's Party Hire Service")
 
-        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ", "Lights", "Dance Floor", "Projector"]  # List of available items
+        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ"]  # List of available items
         self.orders = []  # List to store orders
 
         self.create_widgets()
@@ -84,12 +85,14 @@ class PartyHireApp:
             messagebox.showerror("Error", "Please fill in all fields.")
             return
 
+        # Generate receipt number
+        receipt_number = random.randint(1000, 9999)
+
         # Add order to the list
-        order = f"Customer: {name} - Item: {item} - Quantity: {quantity}"
+        order = f"Receipt No: {receipt_number} - Customer: {name} - Item: {item} - Quantity: {quantity}"
         self.orders.append(order)
 
         # Update listbox
-        self.listbox_orders.insert(tk.END,)
         self.listbox_orders.insert(tk.END, order)
 
         # Clear input fields
