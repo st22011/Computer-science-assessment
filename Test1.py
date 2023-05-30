@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import random
+import json
 
 
 class PartyHireApp:
@@ -9,10 +10,14 @@ class PartyHireApp:
         self.root = root
         self.root.title("Judy's Party Hire Service")
 
-        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ"]  # List of available items
+        self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ", "Tents", "Balloons", "TVS",
+                      "Arcade Games", "Lounge Furniture"]  # List of available items
         self.orders = []  # List to store orders
 
         self.create_widgets()
+
+        # Load saved orders
+        self.load_orders()
 
     def create_widgets(self):
         # Frame for the input fields
@@ -60,6 +65,12 @@ class PartyHireApp:
             self.root, text="Delete Order", command=self.delete_order, width=20
         )
         self.btn_delete.pack(pady=10)
+
+        # Save Button
+        self.btn_save = tk.Button(
+            self.root, text="Save Orders", command=self.save_orders, width=20
+        )
+        self.btn_save.pack(pady=10)
 
         # Validate Customer Name Entry
         self.entry_name.config(
@@ -109,6 +120,32 @@ class PartyHireApp:
         # Clear input fields
         self.entry_name.delete(0, tk.END)
         self.entry_quantity.delete(0, tk.END)
+
+    def save_orders(self):
+        # Check if there are orders to save
+        if not self.orders:
+            messagebox.showwarning("No Orders", "There are no orders to save.")
+            return
+
+        # Save the orders to a file
+        filename = "orders.json"
+        with open(filename, "w") as file:
+            json.dump(self.orders, file)
+
+        messagebox.showinfo("Orders Saved", f"The orders have been saved to {filename}.")
+
+    def load_orders(self):
+        # Load the orders from the file
+        filename = "orders.json"
+        try:
+            with open(filename, "r") as file:
+                self.orders = json.load(file)
+        except FileNotFoundError:
+            return
+
+        # Populate the tree view with loaded orders
+        for order in self.orders:
+            self.treeview_orders.insert("", tk.END, values=order)
 
     def delete_order(self):
         # Get the selected item
