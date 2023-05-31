@@ -8,7 +8,7 @@ import json
 class PartyHireApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Judy's Party Hire Service")
+        self.root.title("Julie's Party Hire Service")
 
         self.items = ["Tables", "Chairs", "Decorations", "Sound System", "BBQ", "Tents", "Balloons", "TVS",
                       "Arcade Games", "Lounge Furniture"]  # List of available items
@@ -127,12 +127,15 @@ class PartyHireApp:
             messagebox.showwarning("No Orders", "There are no orders to save.")
             return
 
-        # Save the orders to a file
+        # Get the displayed orders from the tree view
+        displayed_orders = [self.treeview_orders.item(item)["values"] for item in self.treeview_orders.get_children()]
+
+        # Save the displayed orders to a file
         filename = "orders.json"
         with open(filename, "w") as file:
-            json.dump(self.orders, file)
+            json.dump(displayed_orders, file)
 
-        messagebox.showinfo("Orders Saved", f"The orders have been saved to {filename}.")
+        messagebox.showinfo("Orders Saved", f"The displayed orders have been saved to {filename}.")
 
     def load_orders(self):
         # Load the orders from the file
@@ -141,7 +144,10 @@ class PartyHireApp:
             with open(filename, "r") as file:
                 self.orders = json.load(file)
         except FileNotFoundError:
-            return
+            self.orders = []  # Set empty list if the file is not found
+
+        # Clear the tree view
+        self.treeview_orders.delete(*self.treeview_orders.get_children())
 
         # Populate the tree view with loaded orders
         for order in self.orders:
@@ -159,12 +165,19 @@ class PartyHireApp:
             # Update the tree view
             self.treeview_orders.delete(selected_item)
 
+            # Update the saved orders file
+            displayed_orders = [self.treeview_orders.item(item)["values"] for item in
+                                self.treeview_orders.get_children()]
+            filename = "orders.json"
+            with open(filename, "w") as file:
+                json.dump(displayed_orders, file)
+
 
 # Create the main window
 root = tk.Tk()
 
 # Set window title
-root.title("Judy's Party Hire Service")
+root.title("Julie's Party Hire Service")
 
 # Create an instance of the PartyHireApp
 app = PartyHireApp(root)
