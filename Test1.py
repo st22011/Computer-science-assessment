@@ -72,6 +72,12 @@ class PartyHireApp:
         )
         self.btn_save.pack(pady=10)
 
+        # Exit Button
+        self.btn_exit = tk.Button(
+            self.root, text="Exit", command=self.root.quit, width=20
+        )
+        self.btn_exit.pack(pady=10)
+
         # Validate Customer Name Entry
         self.entry_name.config(
             validate="key", validatecommand=(self.root.register(self.validate_customer_name), "%P")
